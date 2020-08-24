@@ -20,7 +20,9 @@ android {
         //important: automatically generating schemas for ROOM persistence library
         javaCompileOptions {
             annotationProcessorOptions {
-
+                arguments = [
+                        "room.schemaLocation": "$projectDir/schemas".toString(),
+                        "room.incremental"   : "true"]
             }
         }
     }
