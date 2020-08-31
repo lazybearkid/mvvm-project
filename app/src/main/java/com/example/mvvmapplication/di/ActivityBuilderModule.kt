@@ -5,6 +5,7 @@ import com.example.mvvmapplication.di.auth.AuthModule
 import com.example.mvvmapplication.di.auth.AuthScope
 import com.example.mvvmapplication.di.auth.AuthViewModelModule
 import com.example.mvvmapplication.ui.auth.AuthActivity
+import com.example.mvvmapplication.ui.main.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -15,4 +16,7 @@ abstract class ActivityBuilderModule {
         modules = [AuthModule::class, AuthFragmentBuilderModule::class, AuthViewModelModule::class]
     )
     abstract fun contributeAuthActivity(): AuthActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeMainActivity(): MainActivity
 }

@@ -3,12 +3,12 @@ package com.example.mvvmapplication.persistence
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.mvvmapplication.models.AccountPropertiesEntity
-import com.example.mvvmapplication.models.AuthTokenEntity
+import com.example.mvvmapplication.models.AuthToken
 
 // must be included to generate SQLite database
 @Database(
     entities = [
-        AuthTokenEntity::class, AccountPropertiesEntity::class
+        AuthToken::class, AccountPropertiesEntity::class
     ],
     version = 1)
 abstract class AppDatabase : RoomDatabase() {

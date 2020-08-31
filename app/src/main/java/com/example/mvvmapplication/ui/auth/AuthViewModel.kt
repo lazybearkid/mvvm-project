@@ -1,8 +1,7 @@
 package com.example.mvvmapplication.ui.auth
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import com.example.mvvmapplication.models.AuthTokenEntity
+import com.example.mvvmapplication.models.AuthToken
 import com.example.mvvmapplication.repository.auth.AuthRepository
 import com.example.mvvmapplication.ui.BaseViewModel
 import com.example.mvvmapplication.ui.DataState
@@ -37,12 +36,12 @@ constructor(
         _viewState.value = update
     }
 
-    fun setAuthToken(authTokenEntity: AuthTokenEntity){
+    fun setAuthToken(authToken: AuthToken){
         val update = getCurrentNewStateOrNew()
-        if( update.authTokenEntity == authTokenEntity){
+        if( update.authToken == authToken){
             return
         }
-        update.authTokenEntity = authTokenEntity
+        update.authToken = authToken
         _viewState.value = update
     }
 

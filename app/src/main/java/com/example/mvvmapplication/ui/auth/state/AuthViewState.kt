@@ -1,11 +1,11 @@
 package com.example.mvvmapplication.ui.auth.state
 
-import com.example.mvvmapplication.models.AuthTokenEntity
+import com.example.mvvmapplication.models.AuthToken
 
 data class AuthViewState(
     var registrationFields: RegistrationFields? = RegistrationFields(),
     var loginFields: LoginFields? = LoginFields(),
-    var authTokenEntity: AuthTokenEntity? = null
+    var authToken: AuthToken? = null
 )
 
 
