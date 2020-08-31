@@ -82,13 +82,12 @@
             >
 
             <EditText
+                android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/input_password"
-                android:textColor="#000"
                 android:hint="@string/field_password"
                 android:inputType="textPassword"
-                />
+                android:textColor="#000" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

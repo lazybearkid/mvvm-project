@@ -1,11 +1,68 @@
 package com.example.mvvmapplication.ui.auth
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import com.example.mvvmapplication.models.AuthTokenEntity
 import com.example.mvvmapplication.repository.auth.AuthRepository
+import com.example.mvvmapplication.ui.BaseViewModel
+import com.example.mvvmapplication.ui.DataState
+import com.example.mvvmapplication.ui.auth.state.AuthStateEvent
+import com.example.mvvmapplication.ui.auth.state.AuthViewState
+import com.example.mvvmapplication.ui.auth.state.LoginFields
+import com.example.mvvmapplication.ui.auth.state.RegistrationFields
+import com.example.mvvmapplication.util.AbsentLiveData
 import javax.inject.Inject
 
 class AuthViewModel
 @Inject
 constructor(
     val authRepository: AuthRepository
-): ViewModel()
+): BaseViewModel<AuthStateEvent, AuthViewState>(){
+
+    fun setRegistrationField(registrationFields: RegistrationFields){
+        val update = getCurrentNewStateOrNew()
+        if (update.registrationFields == registrationFields){
+            return
+        }
+        update.registrationFields = registrationFields
+        _viewState.value = update
+    }
+
+    fun setLoginFields(loginFields: LoginFields){
+        val update = getCurrentNewStateOrNew()
+        if (update.loginFields == loginFields){
+            return
+        }
+        update.loginFields = loginFields
+        _viewState.value = update
+    }
+
+    fun setAuthToken(authTokenEntity: AuthTokenEntity){
+        val update = getCurrentNewStateOrNew()
+        if( update.authTokenEntity == authTokenEntity){
+            return
+        }
+        update.authTokenEntity = authTokenEntity
+        _viewState.value = update
+    }
+
+    override fun initNewViewState(): AuthViewState {
+        return AuthViewState()
+    }
+
+    override fun handleStateEvent(stateEvent: AuthStateEvent): LiveData<DataState<AuthViewState>> {
+        when(stateEvent){
+            is AuthStateEvent.LoginAttemptEvent -> {
+                return AbsentLiveData.create()
+
+            }
+            is AuthStateEvent.RegisterAttemptEvent -> {
+                return AbsentLiveData.create()
+            }
+            is AuthStateEvent.CheckPreviousAuthEvent -> {
+                return AbsentLiveData.create()
+            }
+        }
+    }
+
+}
