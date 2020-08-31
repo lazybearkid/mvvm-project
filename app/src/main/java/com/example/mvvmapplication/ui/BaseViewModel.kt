@@ -20,7 +20,7 @@ abstract class BaseViewModel<StateEvent, ViewState>: ViewModel() {
     val viewState: LiveData<ViewState>
         get() = _viewState
 
-    protected val _dataState: LiveData<DataState<ViewState>> = Transformations.switchMap(_stateEvent){stateEvent ->
+    val dataState: LiveData<DataState<ViewState>> = Transformations.switchMap(_stateEvent){stateEvent ->
         stateEvent?.let {
             handleStateEvent(stateEvent)
         }

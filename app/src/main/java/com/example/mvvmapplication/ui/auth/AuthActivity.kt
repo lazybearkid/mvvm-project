@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.mvvmapplication.R
 import com.example.mvvmapplication.ui.BaseActivity
+import com.example.mvvmapplication.ui.ResponseType
 import com.example.mvvmapplication.ui.main.MainActivity
 import com.example.mvvmapplication.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerAppCompatActivity
@@ -28,6 +29,34 @@ class AuthActivity : BaseActivity() {
     }
 
     private fun subscribeObservers() {
+        authViewModel.dataState.observe(this, Observer { dataState ->
+            dataState.data?.let { data ->
+                data.data?.let{event ->
+                    event.getContentIfNotHandled()?.let {viewState ->
+                        viewState.authToken?.let { token ->
+                            authViewModel.setAuthToken(token)
+                        }
+                    }
+                }
+                data.response?.let { event ->
+                    event.getContentIfNotHandled()?.let {
+                        when(it.responseType){
+                            is ResponseType.Dialog -> {
+                                //show a dialog
+                            }
+                            is ResponseType.Toast -> {
+                                //show a toast
+                            }
+                            is ResponseType.None -> {
+                                Log.e(TAG, "Authentication, response: ${it.message}")
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+
         authViewModel.viewState.observe(this, Observer {
             it.authToken?.let{
                 Log.d(TAG, "subscribeObservers: loggin in")
