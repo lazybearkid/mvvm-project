@@ -40,7 +40,7 @@ data class RegistrationFields(
             return RegistrationError.mustFillAllFields()
         }
 
-        if (registration_password.equals(registration_confirm_password)){
+        if (!registration_password.equals(registration_confirm_password)){
             return RegistrationError.passwordNotMatch()
         }
 
