@@ -3,6 +3,7 @@ package com.example.mvvmapplication.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
 import com.example.mvvmapplication.R
 import com.example.mvvmapplication.ui.BaseActivity
@@ -11,6 +12,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: BaseActivity() {
     private val TAG: String = "AppDebug"
+    override fun displayProgressbar(loading: Boolean) {
+        if (loading){
+            progress_bar.visibility = View.VISIBLE
+        } else {
+            progress_bar.visibility = View.GONE
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

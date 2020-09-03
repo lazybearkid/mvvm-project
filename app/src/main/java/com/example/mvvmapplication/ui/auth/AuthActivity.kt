@@ -3,6 +3,7 @@ package com.example.mvvmapplication.ui.auth
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -14,11 +15,13 @@ import com.example.mvvmapplication.ui.ResponseType
 import com.example.mvvmapplication.ui.main.MainActivity
 import com.example.mvvmapplication.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
 class AuthActivity : BaseActivity(),
     NavController.OnDestinationChangedListener{
     private val TAG: String = "AppDebug"
+
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
     lateinit var authViewModel: AuthViewModel
@@ -35,26 +38,12 @@ class AuthActivity : BaseActivity(),
 
     private fun subscribeObservers() {
         authViewModel.dataState.observe(this, Observer { dataState ->
+            onDataStateChanged(dataState)
             dataState.data?.let { data ->
                 data.data?.let{event ->
                     event.getContentIfNotHandled()?.let {viewState ->
                         viewState.authToken?.let { token ->
                             authViewModel.setAuthToken(token)
-                        }
-                    }
-                }
-                data.response?.let { event ->
-                    event.getContentIfNotHandled()?.let {
-                        when(it.responseType){
-                            is ResponseType.Dialog -> {
-                                //show a dialog
-                            }
-                            is ResponseType.Toast -> {
-                                //show a toast
-                            }
-                            is ResponseType.None -> {
-                                Log.e(TAG, "Authentication, response: ${it.message}")
-                            }
                         }
                     }
                 }
@@ -88,5 +77,14 @@ class AuthActivity : BaseActivity(),
         destination: NavDestination,
         arguments: Bundle?
     ) {
+        authViewModel.cancelActiveJobs()
+    }
+
+    override fun displayProgressbar(loading: Boolean) {
+        if (loading){
+            progress_bar.visibility = View.VISIBLE
+        } else {
+            progress_bar.visibility = View.GONE
+        }
     }
 }
