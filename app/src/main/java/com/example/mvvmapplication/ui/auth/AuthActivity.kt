@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import com.example.mvvmapplication.R
 import com.example.mvvmapplication.ui.BaseActivity
 import com.example.mvvmapplication.ui.ResponseType
+import com.example.mvvmapplication.ui.auth.state.AuthStateEvent
 import com.example.mvvmapplication.ui.main.MainActivity
 import com.example.mvvmapplication.viewmodels.ViewModelProviderFactory
 import dagger.android.support.DaggerAppCompatActivity
@@ -34,6 +35,12 @@ class AuthActivity : BaseActivity(),
         findNavController(R.id.auth_nav_host_fragment).addOnDestinationChangedListener(this)
 
         subscribeObservers()
+
+        checkPrevAuthUser()
+    }
+
+    private fun checkPrevAuthUser() {
+        authViewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())
     }
 
     private fun subscribeObservers() {

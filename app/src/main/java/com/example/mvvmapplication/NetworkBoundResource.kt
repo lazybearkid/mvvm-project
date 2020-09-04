@@ -8,6 +8,7 @@ import com.example.mvvmapplication.ui.Response
 import com.example.mvvmapplication.ui.ResponseType
 import com.example.mvvmapplication.util.*
 import com.example.mvvmapplication.util.Constants.Companion.NETWORK_TIMEOUT
+import com.example.mvvmapplication.util.Constants.Companion.TEST_CACHE_DELAY
 import com.example.mvvmapplication.util.Constants.Companion.TEST_NETWORK_DELAY
 import com.example.mvvmapplication.util.ErrorHandling.Companion.ERROR_CHECK_NETWORK_CONNECTION
 import com.example.mvvmapplication.util.ErrorHandling.Companion.ERROR_UNKNOWN
@@ -20,7 +21,8 @@ import kotlin.math.log
 
 @OptIn(InternalCoroutinesApi::class)
 abstract class NetworkBoundResource<ResponseObject, ViewStateType>(
-    isNetWorkAvailable: Boolean
+    isNetWorkAvailable: Boolean,
+    isNetWorkRequest: Boolean
 ) {
     private val TAG: String = "AppDebug"
 
@@ -31,31 +33,44 @@ abstract class NetworkBoundResource<ResponseObject, ViewStateType>(
     init {
         setJob(initNewJob())
         setValue(DataState.loading(isLoading = true, cachedData = null))
-        if (isNetWorkAvailable){
-            coroutineScope.launch {
-                delay(TEST_NETWORK_DELAY)
-                withContext(Main){
-                    //make network call
-                    val apiResponse = createCall()
-                    result.addSource(apiResponse){ response ->
-                        result.removeSource(apiResponse)
-                        coroutineScope.launch {
-                            handleNetworkCall(response)
+
+        if (isNetWorkRequest){
+
+            if (isNetWorkAvailable){
+                coroutineScope.launch {
+                    delay(TEST_NETWORK_DELAY)
+                    withContext(Main){
+                        //make network call
+                        val apiResponse = createCall()
+                        result.addSource(apiResponse){ response ->
+                            result.removeSource(apiResponse)
+                            coroutineScope.launch {
+                                handleNetworkCall(response)
+                            }
                         }
                     }
                 }
-            }
-            GlobalScope.launch(IO){
-                delay(NETWORK_TIMEOUT)
-                if (!job.isCompleted){
-                    Log.e(TAG, "NetworkBoundResource: JOB NETWORK TIMEOUT: ")
-                    job.cancel(CancellationException(UNABLE_TO_RESOLVE_HOST))
+                GlobalScope.launch(IO){
+                    delay(NETWORK_TIMEOUT)
+                    if (!job.isCompleted){
+                        Log.e(TAG, "NetworkBoundResource: JOB NETWORK TIMEOUT: ")
+                        job.cancel(CancellationException(UNABLE_TO_RESOLVE_HOST))
+                    }
                 }
+            } else {
+                onErrorReturn(UNABLE_TODO_OPERATION_WITHOUT_INTERNET, shouldUseDialog = true, shouldUseToast = false)
             }
-        } else {
-            onErrorReturn(UNABLE_TODO_OPERATION_WITHOUT_INTERNET, shouldUseDialog = true, shouldUseToast = false)
+        } else { //if the request does not need network
+            coroutineScope.launch {
+                delay(TEST_CACHE_DELAY) //fake delay for cache testing
+
+                //view data from cache only and return
+                createCacheRequestAndReturn()
+            }
         }
     }
+
+    abstract suspend fun createCacheRequestAndReturn()
 
     private suspend fun handleNetworkCall(response: GenericApiResponse<ResponseObject>?) {
         when(response){

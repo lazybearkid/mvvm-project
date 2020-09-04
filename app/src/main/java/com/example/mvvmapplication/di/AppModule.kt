@@ -1,6 +1,8 @@
 package com.example.mvvmapplication.di
 
 import android.app.Application
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
@@ -12,6 +14,7 @@ import com.example.mvvmapplication.persistence.AppDatabase.Companion.DATABASE_NA
 import com.example.mvvmapplication.persistence.AuthTokenDao
 import com.example.mvvmapplication.util.Constants.Companion.BASE_URL
 import com.example.mvvmapplication.util.LiveDataCallAdapterFactory
+import com.example.mvvmapplication.util.PreferenceKeys
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -73,4 +76,15 @@ class AppModule{
             .setDefaultRequestOptions(requestOptions)
     }
 
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(application: Application): SharedPreferences {
+        return application.getSharedPreferences(PreferenceKeys.APP_PREFERENCES, Context.MODE_PRIVATE)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPrefEditor(sharedPreferences: SharedPreferences): SharedPreferences.Editor {
+        return sharedPreferences.edit()
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.mvvmapplication.di.auth
 
+import android.content.SharedPreferences
 import com.example.mvvmapplication.api.auth.AuthApi
 import com.example.mvvmapplication.persistence.AccountPropertiesDao
 import com.example.mvvmapplication.persistence.AuthTokenDao
@@ -26,8 +27,10 @@ class AuthModule {
         sessionManager: SessionManager,
         authTokenDao: AuthTokenDao,
         accountPropertiesDao: AccountPropertiesDao,
-        authApi: AuthApi
+        authApi: AuthApi,
+        sharedPreferences: SharedPreferences,
+        sharedPrefEditor: SharedPreferences.Editor
     ): AuthRepository{
-        return AuthRepository(authTokenDao, accountPropertiesDao, authApi, sessionManager)
+        return AuthRepository(authTokenDao, accountPropertiesDao, authApi, sessionManager, sharedPreferences, sharedPrefEditor)
     }
 }
