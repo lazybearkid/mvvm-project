@@ -1,5 +1,5 @@
 package com.example.mvvmapplication.ui
 
-interface DataStateListener {
+interface DataStateChangedListener {
     fun onDataStateChanged(dataState: DataState<*>?)
 }

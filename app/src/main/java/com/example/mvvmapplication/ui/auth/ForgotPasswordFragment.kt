@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import android.webkit.WebViewClient
 import androidx.navigation.fragment.findNavController
 import com.example.mvvmapplication.R
 import com.example.mvvmapplication.ui.DataState
-import com.example.mvvmapplication.ui.DataStateListener
+import com.example.mvvmapplication.ui.DataStateChangedListener
 import com.example.mvvmapplication.ui.Response
 import com.example.mvvmapplication.ui.ResponseType
 import com.example.mvvmapplication.ui.auth.ForgotPasswordFragment.WebAppInterface.OnWebInteractionCallback
@@ -28,7 +27,7 @@ import java.lang.ClassCastException
 
 class ForgotPasswordFragment : BaseAuthFragment() {
     lateinit var webView: WebView
-    lateinit var stateChangeListener: DataStateListener
+    lateinit var stateChangeChangedListener: DataStateChangedListener
 
     val webInteractionCallback: OnWebInteractionCallback = object: OnWebInteractionCallback{
         override fun onSuccess(email: String) {
@@ -44,7 +43,7 @@ class ForgotPasswordFragment : BaseAuthFragment() {
                     responseType = ResponseType.Dialog()
                 )
             )
-            stateChangeListener.onDataStateChanged(dataStateError)
+            stateChangeChangedListener.onDataStateChanged(dataStateError)
         }
 
         override fun onLoading(isLoading: Boolean) {
@@ -53,7 +52,7 @@ class ForgotPasswordFragment : BaseAuthFragment() {
                 cachedData = null
             )
             GlobalScope.launch(Main){
-                stateChangeListener.onDataStateChanged(dataStateLoading)
+                stateChangeChangedListener.onDataStateChanged(dataStateLoading)
             }
         }
 
@@ -82,13 +81,13 @@ class ForgotPasswordFragment : BaseAuthFragment() {
     @SuppressLint("SetJavaScriptEnabled")
     fun loadPasswordResetView(){
         //show the loading progressbar waiting for the page to be fully loaded
-        stateChangeListener.onDataStateChanged(DataState.loading(isLoading = true, cachedData = null))
+        stateChangeChangedListener.onDataStateChanged(DataState.loading(isLoading = true, cachedData = null))
 
         webview.webViewClient = object: WebViewClient(){
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 //hide the loading progressbar when the page is fully loaded
-                stateChangeListener.onDataStateChanged(DataState.loading(isLoading = false, cachedData = null))
+                stateChangeChangedListener.onDataStateChanged(DataState.loading(isLoading = false, cachedData = null))
             }
         }
         webView.loadUrl(Constants.PASSWORD_RESET_URL)
@@ -117,7 +116,7 @@ class ForgotPasswordFragment : BaseAuthFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
-            stateChangeListener = context as DataStateListener
+            stateChangeChangedListener = context as DataStateChangedListener
         } catch (e: ClassCastException){
             Log.e(TAG, "onAttach: activity must implement DataStateChangeListener" )
         }

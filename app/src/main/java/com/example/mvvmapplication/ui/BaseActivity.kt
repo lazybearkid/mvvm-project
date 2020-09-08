@@ -10,7 +10,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-abstract class BaseActivity: DaggerAppCompatActivity(), DataStateListener {
+abstract class BaseActivity: DaggerAppCompatActivity(), DataStateChangedListener {
     private val TAG: String = "AppDebug"
 
     @Inject
