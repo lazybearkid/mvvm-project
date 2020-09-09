@@ -21,8 +21,6 @@ import javax.inject.Inject
 
 class AuthActivity : BaseActivity(),
     NavController.OnDestinationChangedListener{
-    private val TAG: String = "AppDebug"
-
     @Inject
     lateinit var providerFactory: ViewModelProviderFactory
     lateinit var authViewModel: AuthViewModel

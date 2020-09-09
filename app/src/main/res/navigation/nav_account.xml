@@ -39,7 +39,7 @@
             app:popExitAnim="@anim/fade_out"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
-            app:popUpTo="@id/nav_account"
+            app:popUpTo="@+id/nav_account"
             app:popUpToInclusive="true"/>
         <!-- popUpTo + popUpToInclusive: true ==> clear all the backstack -->
     </fragment>
@@ -57,7 +57,7 @@
             app:popExitAnim="@anim/fade_out"
             app:enterAnim="@anim/fade_in"
             app:exitAnim="@anim/fade_out"
-            app:popUpTo="@id/nav_account"
+            app:popUpTo="@+id/nav_account"
             app:popUpToInclusive="true"/>
     </fragment>
 </navigation>
